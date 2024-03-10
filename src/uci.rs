@@ -212,10 +212,10 @@ impl Uci {
     /// let uci = Uci::from_standard(&m);
     /// assert_eq!(uci.to_string(), "e8g8");
     /// ```
-    pub fn from_standard(m: &Move) -> Uci {
+    pub const fn from_standard(m: &Move) -> Uci {
         match *m {
             Move::Castle { king, rook } => {
-                let side = CastlingSide::from_king_side(king < rook);
+                let side = CastlingSide::from_king_side((king as u8) < (rook as u8));
                 Uci::Normal {
                     from: king,
                     to: Square::from_coords(side.king_to_file(), king.rank()),

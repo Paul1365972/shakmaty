@@ -172,7 +172,7 @@ impl Rank {
     /// Panics if the index is not in the range `0..=7`.
     #[track_caller]
     #[inline]
-    pub fn new(index: u32) -> Rank {
+    pub const fn new(index: u32) -> Rank {
         assert!(index < 8);
         unsafe { Rank::new_unchecked(index) }
     }
@@ -184,7 +184,7 @@ impl Rank {
     /// It is the callers responsibility to ensure the index is in the range
     /// `0..=7`.
     #[inline]
-    pub unsafe fn new_unchecked(index: u32) -> Rank {
+    pub const unsafe fn new_unchecked(index: u32) -> Rank {
         debug_assert!(index < 8);
         unsafe { mem::transmute(index as u8) }
     }
@@ -337,10 +337,10 @@ impl Square {
     /// assert_eq!(Square::from_coords(File::A, Rank::First), Square::A1);
     /// ```
     #[inline]
-    pub fn from_coords(file: File, rank: Rank) -> Square {
+    pub const fn from_coords(file: File, rank: Rank) -> Square {
         // Safety: Files and ranks are represented with 3 bits each, and all
         // 6 bit values are in the range 0..=63.
-        unsafe { Square::new_unchecked(u32::from(file) | (u32::from(rank) << 3)) }
+        unsafe { Square::new_unchecked(file as u32 | ((rank as u32) << 3)) }
     }
 
     /// Parses a square name.
@@ -384,8 +384,8 @@ impl Square {
     /// assert_eq!(Square::B2.file(), File::B);
     /// ```
     #[inline]
-    pub fn file(self) -> File {
-        File::new(u32::from(self) & 7)
+    pub const fn file(self) -> File {
+        File::new(self as u32 & 7)
     }
 
     /// Gets the rank.
@@ -399,8 +399,8 @@ impl Square {
     /// assert_eq!(Square::B2.rank(), Rank::Second);
     /// ```
     #[inline]
-    pub fn rank(self) -> Rank {
-        Rank::new(u32::from(self) >> 3)
+    pub const fn rank(self) -> Rank {
+        Rank::new(self as u32 >> 3)
     }
 
     /// Gets file and rank.
